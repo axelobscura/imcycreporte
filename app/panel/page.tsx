@@ -9,6 +9,7 @@ export default function Panel() {
   const [variables, setVariables] = useState<{ id: number, name: string, value: number | string}[]>([]);
   const valorx = variables.reduce((acc, v) => acc + Number(v.value), 0);
   const valorO = variables.length > 0 ? valorx / variables.length : 0;
+  const [showResults, setShowResults] = useState<boolean>(false);
   const sumMaxos = variables.reduce((acc, v) => {
     const diff = Number(v.value) - valorO;
     return acc + diff * diff;
@@ -43,13 +44,16 @@ export default function Panel() {
             {/* add variable button */}
               <button className="bg-green-900 text-white px-4 py-2 uppercase" onClick={() => setVariables([...variables, { id: variables.length + 1, name: `Valor ${variables.length + 1}`, value: '' }])}>Agregar valor</button>
             {variables.length > 0 && (
-              <button className="bg-red-900 text-white px-4 py-2 uppercase" onClick={() => setVariables(variables.slice(0, -1))}>Eliminar valor</button>
+              <button className="bg-red-900 text-white px-4 py-2 uppercase" onClick={() => {setVariables(variables.slice(0, -1)); setShowResults(false);}}>Eliminar valor</button>
             )}
             
           </div>
         </div>
         <div>
-          {valorx > 0 && (
+          <button className="bg-green-700 font-bold text-white px-4 py-2 uppercase w-full" onClick={() => setShowResults(!showResults)}>Ver Resultados</button>
+        </div>
+        <div className="mt-5 p-5 bg-slate-800">
+          {valorx > 0 && showResults && (
             <>
               <p>Muestras (n): {variables.length}</p>
               <p>Promedio (X): {Math.round(valorO)}</p>
