@@ -8,8 +8,14 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 export default function Panel() {
   const [variables, setVariables] = useState<{ id: number, name: string, value: number | string}[]>([]);
   const valorx = variables.reduce((acc, v) => acc + Number(v.value), 0);
+  const valorO = variables.length > 0 ? valorx / variables.length : 0;
+  const sumMaxos = variables.reduce((acc, v) => {
+    const diff = Number(v.value) - valorO;
+    return acc + diff * diff;
+  }, 0);
+  const desviacion =
+    variables.length > 1 ? Math.sqrt(sumMaxos / (variables.length - 1)) : 0;
 
-  console.log(variables);
   return (
     <div className="grid grid-cols-[1fr_2fr] min-h-screen bg-zinc-50 font-sans dark:bg-black text-white">
       <div className="flex flex-col items-center justify-center p-5 bg-slate-900">
@@ -44,7 +50,14 @@ export default function Panel() {
         </div>
         <div>
           {valorx > 0 && (
-            <p>El valor de x es: {valorx / variables.length}</p>
+            <>
+              <p>Muestras (n): {variables.length}</p>
+              <p>Promedio (X): {Math.round(valorO)}</p>
+              <p>Desviación estándar (S): {Math.round(desviacion)}</p>
+              <p>fc de venta: 250</p>
+              <p>Frecuencia de muestreo: {Math.round(1000 / variables.length)}</p>
+              <p>Sobre Consumo (SC): {Math.round(valorO - 250)}</p>
+            </>
           )}
         </div>
       </div>
